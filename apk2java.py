@@ -15,7 +15,7 @@ sign_file=''
 cwd=os.path.dirname(os.path.abspath(__file__))
 home=os.path.dirname(os.path.realpath(sys.argv[0]))
 outdir=os.path.dirname(os.path.realpath(sys.argv[1]))
-external="https://github.com/TheZ3ro/apk2java-linux/releases/download/tool/tool.zip"
+external="https://github.com/placiano/apk2java-linux/releases/download/tool/tool.zip"
 
 def check_home(path):
   return os.path.isdir(path+"/tool")
@@ -60,9 +60,9 @@ def apktool(smali):
   print ("*********************************************")
   if apk_file != '':
     if smali == True:
-      call(home+'/tool/apktool_200rc3.jar d '+apk_file+' -o '+outdir+project_name+' -f',shell=True)
+      call(home+'/tool/apktool d '+apk_file+' -o '+outdir+project_name+' -f',shell=True)
     else:
-      call(home+'/tool/apktool_200rc3.jar d '+apk_file+' -o '+outdir+project_name+' -sf',shell=True)
+      call(home+'/tool/apktool d '+apk_file+' -o '+outdir+project_name+' -sf',shell=True)
       os.system('mv %s %s' % (outdir+project_name+'/classes.dex', outdir+project_name+'/original/'))
   print ('Done')
 
@@ -71,8 +71,8 @@ def dex2jar():
   print ("**          Convert 'apk' to 'jar'         **")
   print ("*********************************************")
   if apk_file != '':
-    call(home+'/tool/dex2jar-0.0.9.15/d2j-dex2jar.sh -f -o '+outdir+project_name+'.jar '+apk_file, shell=True)
-    call(home+'/tool/dex2jar-0.0.9.15/d2j-asm-verify.sh '+outdir+project_name+'.jar',shell=True)
+    call(home+'/tool/dex2jar/d2j-dex2jar.sh -f -o '+outdir+project_name+'.jar '+apk_file, shell=True)
+    call(home+'/tool/dex2jar/d2j-asm-verify.sh '+outdir+project_name+'.jar',shell=True)
     print ('Done')
 
 def procyon():
@@ -80,7 +80,7 @@ def procyon():
   print ("**        Decompiling class files          **")
   print ("*********************************************")
   if apk_file != '':
-    call(home+'/tool/procyon-decompiler-0528.jar -jar '+outdir+project_name+'.jar -o '+outdir+project_name+'/src/',shell=True)
+    call(home+'/tool/procyon '+outdir+project_name+'.jar -o '+outdir+project_name+'/src/',shell=True)
     print ('Done')
 
 def apktool_build():
@@ -88,7 +88,7 @@ def apktool_build():
   print ("**        Building apk from smali          **")
   print ("*********************************************")
   if apk_folder != '':
-    call(home+'/tool/apktool_200rc3.jar b '+apk_folder+' -o '+outdir+project_name+'-rebuild.apk',shell=True)
+    call(home+'/tool/apktool b '+apk_folder+' -o '+outdir+project_name+'-rebuild.apk',shell=True)
     global sign_file
     sign_file = outdir+project_name+'-rebuild.apk'
     print ('Done')
@@ -106,9 +106,9 @@ def jasmin_build():
   print ("**          Build apk from jasmin          **")
   print ("*********************************************")
   if apk_folder != '':
-    call(home+'/tool/dex2jar-0.0.9.15/d2j-jasmin2jar.sh -f -o '+outdir+project_name+'-new.jar '+outdir+project_name+'/jasmin',shell=True)
-    call(home+'/tool/dex2jar-0.0.9.15/d2j-asm-verify.sh '+outdir+project_name+'-new.jar',shell=True)
-    call(home+'/tool/dex2jar-0.0.9.15/d2j-jar2dex.sh -f -o '+outdir+project_name+'/classes.dex '+outdir+project_name+'-new.jar',shell=True)
+    call(home+'/tool/dex2jar/d2j-jasmin2jar.sh -f -o '+outdir+project_name+'-new.jar '+outdir+project_name+'/jasmin',shell=True)
+    call(home+'/tool/dex2jar/d2j-asm-verify.sh '+outdir+project_name+'-new.jar',shell=True)
+    call(home+'/tool/dex2jar/d2j-jar2dex.sh -f -o '+outdir+project_name+'/classes.dex '+outdir+project_name+'-new.jar',shell=True)
     call('zip -r '+outdir+project_name+'-new.apk -j '+outdir+project_name+'/classes.dex',shell=True)
     global sign_file
     sign_file = outdir+project_name+'-new.apk'
@@ -118,7 +118,7 @@ def sign():
   print ("*********************************************")
   print ("**                Sign apk                 **")
   print ("*********************************************")
-  call(home+'/tool/dex2jar-0.0.9.15/d2j-apk-sign.sh -f -o '+outdir+project_name+'-signed.apk '+sign_file,shell=True)
+  call(home+'/tool/dex2jar/d2j-apk-sign.sh -f -o '+outdir+project_name+'-signed.apk '+sign_file,shell=True)
   print ('Done')
 
 def main():
