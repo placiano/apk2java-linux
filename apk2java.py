@@ -15,7 +15,7 @@ sign_file=''
 cwd=os.path.dirname(os.path.abspath(__file__))
 home=os.path.dirname(os.path.realpath(sys.argv[0]))
 outdir=os.path.dirname(os.path.realpath(sys.argv[1]))
-external="https://github.com/placiano/apk2java-linux/releases/download/tool/tool.zip"
+external="https://github.com/placiano/apk2java-linux/files/205072/tool.zip"
 
 def check_home(path):
   return os.path.isdir(path+"/tool")
@@ -133,16 +133,16 @@ def main():
 	+"(if not specified the decomipled version will be store in a folder in the script directory)")
   (options, args) = parser.parse_args()
 
-  if home == cwd+"/apk2java":
+  if home == cwd:
     if check_home(home) == False:
       getunzipped(external, home, report)
   else:
     if check_home(home) == False:
-      if check_home(cwd+"/apk2java") == False:
-        getunzipped(external, cwd+"/apk2java", report)
-        home = cwd+"/apk2java"
+      if check_home(cwd) == False:
+        getunzipped(external, cwd, report)
+        home = cwd
       else:
-        home = cwd+"/apk2java"
+        home = cwd
   outdir = options.outdir
 
   if (options.smali+options.jasmin+options.nosc) > 1:
